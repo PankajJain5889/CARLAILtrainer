@@ -25,8 +25,8 @@ branchConfig = [["Steer", "Gas", "Brake"], ["Steer", "Gas", "Brake"],
 ["Steer", "Gas", "Brake"], ["Steer", "Gas", "Brake"],["Speed"] ,["PedIntent" , "TraIntent", "VehIntent"]  ]
 Branches = ['Follow_Lane' , 'Left' , 'Right' , 'Straight' , "Speed" , "Intent"]
 BranchCommands = [[0,1,2] , [3] , [4], [5], [0,1,2,3,4,5], [0,1,2,3,4,5]]
-BETA1 = 0.9
-BETA2 = 0.999
+BETA1 = 0.7
+BETA2 = 0.85
 EPSILON = 1e-8
 lambda_steering = 0.5
 lambda_brake = 0.05

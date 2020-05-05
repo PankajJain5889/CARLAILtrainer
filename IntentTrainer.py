@@ -29,12 +29,12 @@ from tensorflow.core.protobuf import saver_pb2
 
 trainfromScratch =  True
 epochs = 1000
-MAX_LR_COUNTER = 3 # model has to perform worse for this number of cases to decrement learning rate 
+MAX_LR_COUNTER = 5 # model has to perform worse for this number of cases to decrement learning rate 
 memory_fraction = 0.5
 MAX_LEARNING_RATE = 2e-4
 MIN_LEARNING_RATE = 1e-7
 LEARNING_RATE_DECAY = 0.5
-LEARNING_RATE =  [MAX_LEARNING_RATE] * len(Branches)
+LEARNING_RATE =  MAX_LEARNING_RATE
 
 
 # In[3]:
@@ -43,8 +43,9 @@ LEARNING_RATE =  [MAX_LEARNING_RATE] * len(Branches)
 #train_loader = Loader('/home/pankaj/CARLA_0.8.4/Collected_data/train/*/' ,'training_data',Branches , BranchCommands)
 #val_loader = Loader('/home/pankaj/CARLA_0.8.4/Collected_data/train/*/' , 'validation_data',Branches , BranchCommands)
 
-train_loader = Loader('/mnt/data001/H5_Data_Collector/with_cut/train/*/' ,'training_data',Branches , BranchCommands)
-val_loader = Loader('/mnt/data001/H5_Data_Collector/with_cut/val/*/' , 'validation_data',Branches , BranchCommands)
+train_loader = Loader('/mnt/data001/all_data/train/' ,'training_data',Branches , BranchCommands)
+val_loader = Loader('/mnt/data001/all_data/val/' , 'validation_data',Branches , BranchCommands)
+
 dir_path = os.getcwd()
 contents= os.listdir(dir_path)
 model_path= os.path.join(dir_path, 'models')
@@ -116,7 +117,7 @@ with sessGraph.as_default():
         min_epoch_loss = np.array([[float('inf')]*len(Branches)])
         summary_writer = tf.summary.FileWriter(logs_path, graph=sessGraph)
         tboard_counter = 0
-        lr_counter = [0] * len(Branches)
+        lr_counter = 0#[0] * len(Branches)
         for epoch in range(epochs): #1st loop for epochs 
             start_time=time.time()
             print(f'Starting epoch: {epoch}')
@@ -125,7 +126,7 @@ with sessGraph.as_default():
                 #step_loss=0
                 for j in range(len(Branches)):# each step will update all braches one at a time  
                     xs , ys = next(batchListGenTrain[j])
-                    if step%100 == 0:
+                    if step%500 == 0:
                         xs = images_aug(xs)
                     xs = np.multiply(xs , 1.0/255.0)
                     command = np.eye(len(Branches))[ys[0,24].astype(np.int8)].reshape(1,-1)
@@ -139,7 +140,7 @@ with sessGraph.as_default():
                                 nettensors['targets'][0]: ys[:,10].reshape([batchSize,1]),
                                 nettensors['targets'][1]: ys[:,0:3],
                                 nettensors['targets'][2]: ys[:,25:28] ,
-                                nettensors['learning_rate']: LEARNING_RATE[j]
+                                nettensors['learning_rate']: LEARNING_RATE
                                }  #
                     _,loss,log    = sess.run([contSolver, contLoss, log ], feed_dict = feedDict)
                     #print(log)
@@ -151,7 +152,7 @@ with sessGraph.as_default():
             epoch_loss = np.zeros((1,len(Branches)))
             for step in range(VAL_STEPS):
                 step_loss = [0]*len(Branches) 
-                for j in range(len(branchConfig)):
+                for j in range(len(Branches)):
                     xs, ys = next(batchListGenVal[j])
                     xs =  np.multiply(xs , 1.0/255.0)
                     contLoss = nettensors['losses'] 
@@ -181,24 +182,16 @@ with sessGraph.as_default():
                 min_epoch_loss = epoch_loss               
                 print(f"Found better model saving  checkpoint")
                 checkpoint_path=os.path.join(model_path , "model.ckpt")
-                file_name= saver.save(sess , checkpoint_path)
-                for j , imp in enumerate(branchImprovement):
-                    if imp:
-                        lr_counter[j] = 0                       
+                file_name= saver.save(sess , checkpoint_path)                      
             else: # Did not find a better model
-                for j , imp in enumerate(branchImprovement):
-                    if not imp:
-                        lr_counter[j] += 1 # Increment counter only for which improvement was not found    
-            for j , imp in enumerate(branchImprovement):            
-                if lr_counter[j] ==  MAX_LR_COUNTER:
-                    LEARNING_RATE[j] *= LEARNING_RATE_DECAY
-                    if LEARNING_RATE[j] <= MIN_LEARNING_RATE:
-                        print(f"Last learning rate achieved for {Branches[j]}")
-                        LEARNING_RATE[j] = MAX_LEARNING_RATE
-                    print(f"Updated learning rate for {Branches[j] }: {LEARNING_RATE[j]} ", )
-                    lr_counter[j] = 0
-            print(f"lr counter : {lr_counter}")
-            print(f"Current learning rate : {LEARNING_RATE}")             
+                lr_counter += 1 # Increment counter only for which improvement was not found    
+            if lr_counter ==  MAX_LR_COUNTER:
+                LEARNING_RATE *= LEARNING_RATE_DECAY
+                if LEARNING_RATE <= MIN_LEARNING_RATE:
+                    print(f"Last learning rate achieved ")
+                    LEARNING_RATE = MAX_LEARNING_RATE
+                print(f"Updated learning rate : {LEARNING_RATE} ", )
+                lr_counter = 0        
         print("Saving last model")
         checkpoint_path=os.path.join(model_path , "model.ckpt")
         file_name= saver.save(sess , checkpoint_path)

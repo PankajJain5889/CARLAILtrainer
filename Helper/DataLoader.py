@@ -6,7 +6,7 @@ import json
 
 from Helper.ImitationLearning import image_size
 
-MIN_BATCH_SIZE = 32
+MIN_BATCH_SIZE = 120
 MAX_BATCH_SIZE = 256
 batchSize= MIN_BATCH_SIZE
 MAX_SPEED = 25.0
@@ -18,7 +18,6 @@ class Loader():
         self.branches = branches
         self.branchCommands = branchCommands
         self.dict = {'Path': self.path}
-        self.create_branches()
         self.load_dict()
     def files(self):
         return glob.glob(self.path + '*.h5')
@@ -68,6 +67,8 @@ class Loader():
                 os.remove(self.name+'.json')
                 self.load_dict()
         else:
+            self.dict = {} # Empty dictionary as aprecautionary measure
+            self.create_branches()
             self.dict['Path'] = self.path
             print(f"generating new json from {len(self.files())} files")
             for file in self.files():
