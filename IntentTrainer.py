@@ -43,8 +43,8 @@ LEARNING_RATE =  MAX_LEARNING_RATE
 #train_loader = Loader('/home/pankaj/CARLA_0.8.4/Collected_data/train/*/' ,'training_data',Branches , BranchCommands)
 #val_loader = Loader('/home/pankaj/CARLA_0.8.4/Collected_data/train/*/' , 'validation_data',Branches , BranchCommands)
 
-train_loader = Loader('/mnt/data001/all_data/train/' ,'training_data',Branches , BranchCommands)
-val_loader = Loader('/mnt/data001/all_data/val/' , 'validation_data',Branches , BranchCommands)
+train_loader = Loader('/mnt/data001/H5_Data_Collector/with_cut/train/' ,'training_data',Branches , BranchCommands)
+val_loader = Loader('/mnt/data001/H5_Data_Collector/with_cut/val/' , 'validation_data',Branches , BranchCommands)
 
 dir_path = os.getcwd()
 contents= os.listdir(dir_path)
