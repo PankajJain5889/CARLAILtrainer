@@ -85,6 +85,8 @@ class Loader():
                                     self.dict[branch]['Count'] += 1
                 except: 
                     print(file)
+            for branch in self.branches:
+                print(f"Branch: {branch} DataPoints : {self.dict[branch]['Count']}")
             self.min_count = min(self.dict[branch]['Count'] for branch in self.branches)
             self.reshape_branches()
 
