@@ -37,17 +37,18 @@ class Loader():
             files = list(self.dict[branch]['Files'].keys())
             fileIndex =np.random.randint(0 , len(files))
             while self.dict[branch]['Count'] >= self.min_count:
-                self.dict[branch]['Files'][files[fileIndex]] = self.dict[branch]['Files'][files[fileIndex]]
-                if len(self.dict[branch]['Files'][files[fileIndex]]) == 0:
+                i = np.random.randint(0 , len(self.dict[branch]['Files'][files[fileIndex]] )) 
+                self.dict[branch]['Files'][files[fileIndex]].pop(i)
+                if len(self.dict[branch]['Files'][files[fileIndex]]) == 0: 
                     del self.dict[branch]['Files'][files[fileIndex]]
-                    files = self.dict[branch]['Files'].keys()
-                    fileIndex =np.random.randint(0 , len(files))
+                files = list(self.dict[branch]['Files'].keys())
+                fileIndex =np.random.randint(0 , len(files))    
                 self.dict[branch]['Count'] -=1
             self.write_json()
             
     def write_json(self):
         with open(self.name+'.json', 'w') as fp:
-            json.dump(self.dict, fp)
+            fp.write(json.dumps(self.dict,  indent=2))
         fp.close()
         
     def load_dict(self):

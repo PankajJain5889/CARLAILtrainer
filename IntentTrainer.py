@@ -30,7 +30,7 @@ from tensorflow.core.protobuf import saver_pb2
 trainfromScratch =  True
 epochs = 1000
 MAX_LR_COUNTER = 5 # model has to perform worse for this number of cases to decrement learning rate 
-memory_fraction = 0.9
+memory_fraction = 0.5
 MAX_LEARNING_RATE = 2e-4
 MIN_LEARNING_RATE = 1e-7
 LEARNING_RATE_DECAY = 0.5
@@ -40,8 +40,8 @@ LEARNING_RATE =  MAX_LEARNING_RATE
 # In[3]:
 
 
-#train_loader = Loader('/home/pankaj/CARLA_0.8.4/Collected_data/train/*/' ,'training_data',Branches , BranchCommands)
-#val_loader = Loader('/home/pankaj/CARLA_0.8.4/Collected_data/train/*/' , 'validation_data',Branches , BranchCommands)
+#train_loader = Loader('/home/pankaj/CARLA_0.8.4/Dagger_Data_Collector/' ,'training_data',Branches , BranchCommands)
+#val_loader = Loader('/home/pankaj/CARLA_0.8.4/Dagger_Data_Collector/' , 'validation_data',Branches , BranchCommands)
 
 
 train_loader = Loader('/mnt/data001/H5_Data_Collector/train/*/' ,'training_data',Branches , BranchCommands)
