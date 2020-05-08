@@ -43,8 +43,8 @@ LEARNING_RATE =  MAX_LEARNING_RATE
 #train_loader = Loader('/home/pankaj/CARLA_0.8.4/Collected_data/train/*/' ,'training_data',Branches , BranchCommands)
 #val_loader = Loader('/home/pankaj/CARLA_0.8.4/Collected_data/train/*/' , 'validation_data',Branches , BranchCommands)
 
-train_loader = Loader('/mnt/data001/all_data/train/' ,'training_data',Branches , BranchCommands)
-val_loader = Loader('/mnt/data001/all_data/val/' , 'validation_data',Branches , BranchCommands)
+train_loader = Loader('/mnt/data001/H5_Data_Collector/train/' ,'training_data',Branches , BranchCommands)
+val_loader = Loader('/mnt/data001/H5_Data_Collector/val/' , 'validation_data',Branches , BranchCommands)
 
 dir_path = os.getcwd()
 contents= os.listdir(dir_path)
@@ -193,8 +193,9 @@ with sessGraph.as_default():
                     print(f"Last learning rate achieved ")
                     LEARNING_RATE = MAX_LEARNING_RATE
                 print(f"Updated learning rate : {LEARNING_RATE} ", )
-                lr_counter = 0        
-            print("Current Learning rate:", LEARNING_RATE)
+                lr_counter = 0    
+            else:    
+            	print("Current Learning rate:", LEARNING_RATE)
         print("Saving last model")
         checkpoint_path=os.path.join(model_path , "model.ckpt")
         file_name= saver.save(sess , checkpoint_path)
