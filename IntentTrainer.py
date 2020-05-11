@@ -128,7 +128,7 @@ with sessGraph.as_default():
                 #step_loss=0
                 for j in range(len(Branches)):# each step will update all braches one at a time  
                     xs , ys = next(batchListGenTrain[j])
-                    if step%500 == 0:
+                    if step%100 == 0:
                         xs = images_aug(xs)
                     xs = np.multiply(xs , 1.0/255.0)
                     command = np.eye(len(Branches))[ys[0,24].astype(np.int8)].reshape(1,-1)
