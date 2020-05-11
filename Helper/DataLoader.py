@@ -6,7 +6,7 @@ import json
 
 from Helper.ImitationLearning import image_size
 
-MIN_BATCH_SIZE = 32
+MIN_BATCH_SIZE = 120
 MAX_BATCH_SIZE = 256
 batchSize= MIN_BATCH_SIZE
 MAX_SPEED = 25.0
