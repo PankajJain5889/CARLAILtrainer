@@ -244,11 +244,11 @@ def create_network(scopeName='controlNET'):
         for i in range(len(branchConfig)):
             with tf.name_scope("Branch_" + str(i)):
                 if branchConfig[i][0] == "Speed":
-                    loss = tf.sqrt(tf.reduce_mean(tf.squared_difference(speed, targets[0])))
+                    loss = tf.reduce_mean(tf.squared_difference(speed, targets[0]))
                     Losses[i] = loss
                     tf.summary.scalar("Speed", loss) 
                 elif branchConfig[i][0] == "PedIntent":
-                    loss = tf.sqrt(tf.reduce_mean(tf.squared_difference(intent, targets[2])))
+                    loss = tf.reduce_mean(tf.squared_difference(intent, targets[2]))
                     Losses[i] = loss
                     tf.summary.scalar("Intent", loss) 
                 else:
@@ -259,8 +259,8 @@ def create_network(scopeName='controlNET'):
                     logger['Intermediate_losses'].append(loss)
                     loss = tf.reduce_sum(loss)# Join all the three losses 1*1
                     logger['Intermediate_losses'].append(loss)
-                    loss = tf.sqrt(loss) # Take squar root to bring back to same size
-                    logger['Intermediate_losses'].append(loss)
+                    #loss = tf.sqrt(loss) # Take squar root to bring back to same size
+                    #logger['Intermediate_losses'].append(loss)
                     #loss = tf.sqrt(tf.reduce_mean(tf.squared_difference(controls[i], targets[1])))
                     Losses[i] = loss
                     tf.summary.scalar("Branch_"+Branches[i], loss)                       
