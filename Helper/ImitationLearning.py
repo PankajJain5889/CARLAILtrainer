@@ -261,7 +261,7 @@ def create_network(scopeName='controlNET'):
                     logger['Intermediate_losses'].append(loss)
                     loss = tf.sqrt(loss) # Take squar root to bring back to same size
                     logger['Intermediate_losses'].append(loss)
-                    loss = tf.sqrt(tf.reduce_mean(tf.squared_difference(controls[i], targets[1])))
+                    #loss = tf.sqrt(tf.reduce_mean(tf.squared_difference(controls[i], targets[1])))
                     Losses[i] = loss
                     tf.summary.scalar("Branch_"+Branches[i], loss)                       
         Losses = tf.convert_to_tensor(Losses)
