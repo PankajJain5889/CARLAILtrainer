@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/pankaj/changed_old_trainer/trainer25/models/model.ckpt"
+all_model_checkpoint_paths: "/home/pankaj/changed_old_trainer/trainer25/models/model.ckpt"
