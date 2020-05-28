@@ -40,12 +40,12 @@ LEARNING_RATE =  MAX_LEARNING_RATE
 # In[3]:
 
 
-#train_loader = Loader('/home/pankaj/CARLA_0.8.4/Dagger_Data_Collector/' ,'training_data',Branches , BranchCommands)
-#val_loader = Loader('/home/pankaj/CARLA_0.8.4/Dagger_Data_Collector/' , 'validation_data',Branches , BranchCommands)
+train_loader = Loader('/home/pankaj/CARLA_0.8.4/Dagger_Data_Collector/' ,'training_data',Branches , BranchCommands)
+val_loader = Loader('/home/pankaj/CARLA_0.8.4/Dagger_Data_Collector/' , 'validation_data',Branches , BranchCommands)
 
 
-train_loader = Loader('/mnt/data001/png_json_data/train/h5_data/' ,'training_data',Branches , BranchCommands)
-val_loader = Loader('/mnt/data001/png_json_data//val/h5_data/' , 'validation_data',Branches , BranchCommands)
+#train_loader = Loader('/mnt/data001/png_json_data/train/h5_data/' ,'training_data',Branches , BranchCommands)
+#val_loader = Loader('/mnt/data001/png_json_data//val/h5_data/' , 'validation_data',Branches , BranchCommands)
 
 
 dir_path = os.getcwd()
@@ -81,25 +81,6 @@ for branch in Branches:
     batchListGenVal.append(miniBatchGen)
 
 
-# from IPython.display import clear_output
-# while True:
-#     for j in range(len(Branches)):
-#         xs , ys = next(batchListGenTrain[j])
-#         #xs = images_aug(xs)
-#         xs = np.multiply(xs , 1.0/255.0)
-#         command = np.eye(len(Branches))[ys[0,24].astype(np.int8)].reshape(1,-1)
-#         for i in range(batchSize):
-#             plt.imshow(xs[i])
-#             plt.show()
-#             print(f"Steer: {ys[i][0]} Throttle: {ys[i][1]} Brake: {ys[i][2]} TimeStamp: {ys[i][11] }")
-#             print(f"Speed: {ys[i][10]} Directions: {ys[i][24]} Branch:{Branches[j]} Iterator: {i}") 
-#             print(f"Ped: {ys[i][25]} Veh: {ys[i][26]} Tra: {ys[i][27]} Command:{command}")
-#             clear_output(wait = True)        
-
-# In[5]:
-
-
-# Setup tensorflow 
 tf.reset_default_graph()
 sessGraph = tf.Graph()
 # use many gpus
@@ -123,9 +104,7 @@ with sessGraph.as_default():
         for epoch in range(epochs): #1st loop for epochs 
             start_time=time.time()
             print(f'Starting epoch: {epoch}')
-            #epoch_loss=0
             for step in range(steps_per_epoch):# second loop for each step in a epoch
-                #step_loss=0
                 for j in range(len(Branches)):# each step will update all braches one at a time  
                     xs , ys = next(batchListGenTrain[j])
                     if step%100 == 0:
@@ -134,7 +113,6 @@ with sessGraph.as_default():
                     command = np.eye(len(Branches))[ys[0,24].astype(np.int8)].reshape(1,-1)
                     contSolver = nettensors['optimizers']
                     contLoss = nettensors['losses']
-                    log = nettensors['Logger']
                     feedDict = {nettensors['inputs'][0]: xs, 
                                 nettensors['inputs'][1][0]: command,
                                 nettensors['inputs'][1][1]:ys[:,10].reshape([batchSize,1]),
@@ -143,10 +121,8 @@ with sessGraph.as_default():
                                 nettensors['targets'][1]: ys[:,0:3],
                                 nettensors['targets'][2]: ys[:,25:28] ,
                                 nettensors['learning_rate']: LEARNING_RATE
-                               }  #
-                    _,loss,log    = sess.run([contSolver, contLoss, log ], feed_dict = feedDict)
-                    #print(log)
-                #time.sleep(20)
+                               }  
+                    _,loss    = sess.run([contSolver, contLoss], feed_dict = feedDict)
                 summary = merged_summary_op.eval(feed_dict=feedDict)
                 summary_writer.add_summary(summary, tboard_counter)
                 tboard_counter+=1
@@ -158,7 +134,7 @@ with sessGraph.as_default():
                     xs, ys = next(batchListGenVal[j])
                     xs =  np.multiply(xs , 1.0/255.0)
                     contLoss = nettensors['losses'] 
-                    log = nettensors['Logger']
+                    #log = nettensors['Logger']
                     command = np.eye(len(Branches))[ys[0,24].astype(np.int8)].reshape(1,-1)
                     feedDict = {
                             nettensors['inputs'][0]: xs, 
@@ -169,10 +145,8 @@ with sessGraph.as_default():
                             nettensors['targets'][1]: ys[:,0:3],
                             nettensors['targets'][2]: ys[:,25:28],
                             }  
-                    loss,log = sess.run([contLoss , log], feed_dict = feedDict)
-                    #print(f"Validation--> Step:: {step}  Branch: {branch_map[j]} loss: {loss}" )
-                    #print(log)
-                    step_loss[j] = loss 
+                    loss= sess.run([contLoss], feed_dict = feedDict)
+                    step_loss[j] = loss[0] 
                 epoch_loss+=step_loss 
             epoch_loss /= VAL_STEPS    
             branchImprovement = list((epoch_loss < min_epoch_loss)[0])

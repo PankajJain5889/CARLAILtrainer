@@ -271,6 +271,7 @@ def create_network(scopeName='controlNET'):
         contSolver = opt.minimize(contLoss) 
         logger ["losses"]=  Losses 
         logger["contLoss"]=  contLoss #, 'controls': controls , 'speed': speed
+        tf.summary.scalar("CurrentLrate", learning_rate)
         tensors = {
             'optimizers': contSolver,
             'losses': contLoss,
@@ -280,5 +281,5 @@ def create_network(scopeName='controlNET'):
             'droput':dout,
             'Logger': logger,
             'learning_rate': learning_rate
-                }#'step': global_step
+                }
     return tensors
