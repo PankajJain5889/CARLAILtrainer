@@ -44,8 +44,8 @@ LEARNING_RATE =  MAX_LEARNING_RATE
 #val_loader = Loader('/home/pankaj/CARLA_0.8.4/Dagger_Data_Collector/' , 'validation_data',Branches , BranchCommands)
 
 
-train_loader = Loader('/mnt/data001/3cam_data/h5_data/' ,'training_data',Branches , BranchCommands)
-val_loader = Loader('/mnt/data001/3cvalidation_data/h5_data/' , 'validation_data',Branches , BranchCommands)
+train_loader = Loader('/mnt/data001/png_json_data/BigTrain/h5_data/' ,'training_data',Branches , BranchCommands)
+val_loader = Loader('/mnt/data001/png_json_data/BigVal/h5_data/' , 'validation_data',Branches , BranchCommands)
 
 
 dir_path = os.getcwd()
