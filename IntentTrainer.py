@@ -29,10 +29,10 @@ from tensorflow.core.protobuf import saver_pb2
 
 trainfromScratch =  True
 epochs = 1000
-MAX_LR_COUNTER = 3 # model has to perform worse for this number of cases to decrement learning rate 
+MAX_LR_COUNTER = 5 # model has to perform worse for this number of cases to decrement learning rate 
 memory_fraction = 0.8
 MAX_LEARNING_RATE = 2e-4
-MIN_LEARNING_RATE = 1e-7
+MIN_LEARNING_RATE = 1e-8
 LEARNING_RATE_DECAY = 0.5
 LEARNING_RATE =  MAX_LEARNING_RATE
 
@@ -44,8 +44,8 @@ LEARNING_RATE =  MAX_LEARNING_RATE
 #val_loader = Loader('/home/pankaj/CARLA_0.8.4/Dagger_Data_Collector/' , 'validation_data',Branches , BranchCommands)
 
 
-train_loader = Loader('/mnt/data001/3cam_data/h5_data/' ,'training_data',Branches , BranchCommands)
-val_loader = Loader('/mnt/data001/3cvalidation_data/h5_data/' , 'validation_data',Branches , BranchCommands)
+train_loader = Loader('/mnt/data001/png_json_data/SingleWeather/Train/h5_data/' ,'training_data',Branches , BranchCommands)
+val_loader = Loader('/mnt/data001/png_json_data/SingleWeather/Val/h5_data/' , 'validation_data',Branches , BranchCommands)
 
 
 dir_path = os.getcwd()
