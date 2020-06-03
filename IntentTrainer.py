@@ -29,7 +29,7 @@ from tensorflow.core.protobuf import saver_pb2
 
 trainfromScratch =  True
 epochs = 1000
-MAX_LR_COUNTER = 5 # model has to perform worse for this number of cases to decrement learning rate 
+MAX_LR_COUNTER = 3 # model has to perform worse for this number of cases to decrement learning rate 
 memory_fraction = 0.8
 MAX_LEARNING_RATE = 2e-4
 MIN_LEARNING_RATE = 1e-8
