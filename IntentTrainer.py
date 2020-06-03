@@ -48,6 +48,7 @@ train_loader = Loader('/mnt/data001/png_json_data/SingleWeather/Train/h5_data/' 
 val_loader = Loader('/mnt/data001/png_json_data/SingleWeather/Val/h5_data/' , 'validation_data',Branches , BranchCommands)
 
 
+
 dir_path = os.getcwd()
 contents= os.listdir(dir_path)
 model_path= os.path.join(dir_path, 'models')
