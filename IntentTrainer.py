@@ -30,7 +30,7 @@ from tensorflow.core.protobuf import saver_pb2
 trainfromScratch =  True
 epochs = 1000
 MAX_LR_COUNTER = 3 # model has to perform worse for this number of cases to decrement learning rate 
-memory_fraction = 0.8
+memory_fraction = 0.9
 MAX_LEARNING_RATE = 2e-4
 MIN_LEARNING_RATE = 1e-8
 LEARNING_RATE_DECAY = 0.5
@@ -158,18 +158,21 @@ with sessGraph.as_default():
 
             if np.sum(epoch_loss < min_epoch_loss) > len(Branches)/2:# Loss has decreased in more than half the branches
                 min_epoch_loss = epoch_loss               
-                print(f"Found better model saving  checkpoint")
+                print(f"\tFound better model saving  checkpoint")
                 checkpoint_path=os.path.join(model_path , "model.ckpt")
                 file_name= saver.save(sess , checkpoint_path)    
                 lr_counter = 0                  
             else: # Did not find a better model
-                lr_counter += 1 # Increment counter only for which improvement was not found    
+                lr_counter += 1 # Increment counter only for which improvement was not found 
+                # restore trained parameters     
             if lr_counter ==  MAX_LR_COUNTER:
                 LEARNING_RATE *= LEARNING_RATE_DECAY
                 if LEARNING_RATE <= MIN_LEARNING_RATE:
                     print(f"Last learning rate achieved ")
                     LEARNING_RATE = MAX_LEARNING_RATE
                 print(f"Updated learning rate : {LEARNING_RATE} ", )
+                print("\tloading last best model from " , model_path)
+                saver.restore(sess, model_path+"/model.ckpt")
                 lr_counter = 0    
             else:    
             	print("Current Learning rate:", LEARNING_RATE)
