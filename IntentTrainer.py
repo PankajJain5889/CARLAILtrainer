@@ -32,7 +32,7 @@ epochs = 1000
 MAX_LR_COUNTER = 3 # model has to perform worse for this number of cases to decrement learning rate 
 memory_fraction = 0.9
 MAX_LEARNING_RATE = 2e-4
-MIN_LEARNING_RATE = 1e-8
+MIN_LEARNING_RATE = 1e-7
 LEARNING_RATE_DECAY = 0.5
 LEARNING_RATE =  MAX_LEARNING_RATE
 
